@@ -1,1130 +1,1038 @@
 <!DOCTYPE html>
 <html lang="fi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SiistiArki</title>
-  <style>
-    :root{
-      --blue:#4ea6ca;
-      --blue-2:#7bc0df;
-      --mint:#c8f5e6;
-      --mint-2:#e8fbf4;
-      --yellow:#e8c96d;
-      --yellow-2:#f4df9a;
-      --dark:#173038;
-      --text:#21343a;
-      --muted:#58727a;
-      --card:rgba(255,255,255,.80);
-      --border:rgba(23,48,56,.10);
-      --shadow:0 12px 30px rgba(23,48,56,.10);
-      --radius:22px;
-    }
-
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{
-      margin:0;
-      font-family:Arial, Helvetica, sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(255,255,255,.85), transparent 30%),
-        linear-gradient(135deg, var(--mint), var(--mint-2) 42%, #f7fffd 100%);
-      line-height:1.7;
-      overflow-x:hidden;
-    }
-
-    a{color:inherit}
-
-    header{
-      position:sticky;
-      top:0;
-      z-index:20;
-      backdrop-filter:blur(12px);
-      background:rgba(78,166,202,.92);
-      border-bottom:1px solid rgba(255,255,255,.18);
-    }
-
-    .nav-wrap{
-      max-width:1180px;
-      margin:0 auto;
-      padding:14px 18px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      flex-wrap:wrap;
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      color:#fff;
-      font-weight:800;
-      letter-spacing:.2px;
-    }
-
-    .brand-mark{
-      width:38px;
-      height:38px;
-      border-radius:14px;
-      background:linear-gradient(135deg, var(--yellow), #fff7d6);
-      box-shadow:inset 0 0 0 2px rgba(255,255,255,.35);
-      flex:0 0 auto;
-    }
-
-    nav{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-
-    nav a{
-      text-decoration:none;
-      color:#fff;
-      font-weight:700;
-      padding:8px 12px;
-      border-radius:999px;
-      transition:.2s ease;
-      white-space:nowrap;
-    }
-
-    nav a:hover{background:rgba(255,255,255,.16)}
-
-    .hero{
-      max-width:1180px;
-      margin:0 auto;
-      padding:64px 18px 26px;
-      display:grid;
-      grid-template-columns:1.2fr .8fr;
-      gap:22px;
-      align-items:center;
-    }
-
-    .hero h1{
-      font-size:clamp(2.4rem, 5vw, 4.3rem);
-      line-height:1.02;
-      margin:0 0 14px;
-      color:var(--dark);
-    }
-
-    .hero p{
-      margin:0;
-      font-size:1.08rem;
-      color:var(--muted);
-      max-width:62ch;
-    }
-
-    .hero-panel{
-      background:linear-gradient(135deg, rgba(255,255,255,.90), rgba(255,255,255,.70));
-      border:1px solid var(--border);
-      box-shadow:var(--shadow);
-      border-radius:30px;
-      padding:22px;
-      position:relative;
-      overflow:hidden;
-      min-height:180px;
-    }
-
-    .hero-panel::after{
-      content:"";
-      position:absolute;
-      right:-42px;
-      bottom:-42px;
-      width:160px;
-      height:160px;
-      border-radius:50%;
-      background:radial-gradient(circle, rgba(232,201,109,.65), rgba(232,201,109,0) 68%);
-      pointer-events:none;
-    }
-
-    .hero-badges{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:18px;
-    }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:9px 13px;
-      border-radius:999px;
-      background:rgba(199,245,230,.85);
-      border:1px solid rgba(78,166,202,.18);
-      color:var(--dark);
-      font-weight:700;
-      font-size:.95rem;
-    }
-
-    section{
-      padding:22px 18px;
-    }
-
-    .container{
-      max-width:1180px;
-      margin:0 auto;
-    }
-
-    .section-title{
-      margin:0 0 14px;
-      font-size:clamp(1.5rem, 2.4vw, 2.2rem);
-      color:var(--dark);
-    }
-
-    .section-lead{
-      margin:0 0 18px;
-      color:var(--muted);
-      max-width:78ch;
-    }
-
-    .grid{
-      display:grid;
-      gap:18px;
-    }
-
-    .grid-3{
-      grid-template-columns:repeat(3, minmax(0, 1fr));
-    }
-
-    .grid-2{
-      grid-template-columns:repeat(2, minmax(0, 1fr));
-    }
-
-    .card{
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:20px;
-    }
-
-    .card h3{
-      margin:0 0 8px;
-      font-size:1.15rem;
-      color:var(--dark);
-    }
-
-    .card p{margin:0;color:var(--muted)}
-
-    .feature{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-
-    .feature-icon{
-      width:50px;
-      height:50px;
-      border-radius:18px;
-      background:linear-gradient(135deg, rgba(78,166,202,.22), rgba(232,201,109,.18));
-      display:grid;
-      place-items:center;
-      font-size:1.2rem;
-      font-weight:800;
-      color:var(--dark);
-    }
-
-    .about-person{
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-    }
-
-    .avatar{
-      width:64px;
-      height:64px;
-      border-radius:22px;
-      display:grid;
-      place-items:center;
-      font-size:1.2rem;
-      font-weight:800;
-      color:var(--dark);
-      background:linear-gradient(135deg, var(--yellow), #fff6ce);
-      box-shadow:inset 0 0 0 2px rgba(255,255,255,.45);
-    }
-
-    .muted{
-      color:var(--muted);
-      font-size:.97rem;
-    }
-
-    .calc-wrap{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:18px;
-      align-items:start;
-    }
-
-    .stack{display:grid; gap:14px}
-
-    .form-grid{
-      display:grid;
-      gap:12px;
-    }
-
-    .field{
-      display:grid;
-      gap:7px;
-    }
-
-    .field label,
-    .group-title{
-      font-weight:800;
-      color:var(--dark);
-    }
-
-    input, select, textarea{
-      width:100%;
-      border:1px solid rgba(23,48,56,.15);
-      border-radius:16px;
-      padding:13px 14px;
-      font-size:1rem;
-      color:var(--text);
-      background:rgba(255,255,255,.95);
-      outline:none;
-    }
-
-    textarea{
-      min-height:130px;
-      resize:vertical;
-    }
-
-    input:focus, select:focus, textarea:focus{
-      border-color:rgba(78,166,202,.55);
-      box-shadow:0 0 0 4px rgba(78,166,202,.12);
-    }
-
-    .services-grid{
-      display:grid;
-      grid-template-columns:repeat(3, minmax(0, 1fr));
-      gap:12px;
-    }
-
-    .service-card{
-      position:relative;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      padding:16px;
-      border-radius:20px;
-      border:1px solid rgba(23,48,56,.12);
-      background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(248,255,252,.88));
-      transition:.18s ease;
-      min-height:128px;
-    }
-
-    .service-card:hover{
-      transform:translateY(-1px);
-      border-color:rgba(78,166,202,.30);
-    }
-
-    .service-top{
-      display:flex;
-      align-items:flex-start;
-      gap:10px;
-      cursor:pointer;
-    }
-
-    .service-top input{
-      width:20px;
-      height:20px;
-      margin:2px 0 0;
-      accent-color:var(--blue);
-      flex:0 0 auto;
-    }
-
-    .service-title{
-      display:block;
-      font-weight:800;
-      color:var(--dark);
-      margin-bottom:4px;
-    }
-
-    .service-desc{
-      color:var(--muted);
-      font-size:.95rem;
-      margin:0;
-    }
-
-    .sub-box{
-      display:none;
-      margin-top:2px;
-      padding-top:12px;
-      border-top:1px dashed rgba(23,48,56,.14);
-    }
-
-    .sub-grid{
-      display:grid;
-      gap:10px;
-    }
-
-    .checkbox-list{
-      display:grid;
-      gap:10px;
-    }
-
-    .checkbox-item{
-      display:flex;
-      align-items:flex-start;
-      gap:10px;
-      padding:10px 12px;
-      border-radius:14px;
-      background:rgba(255,255,255,.82);
-      border:1px solid rgba(23,48,56,.10);
-    }
-
-    .checkbox-item input{
-      width:18px;
-      height:18px;
-      margin-top:2px;
-      accent-color:var(--blue);
-      flex:0 0 auto;
-    }
-
-    .estimate{
-      display:grid;
-      gap:10px;
-    }
-
-    .estimate-box{
-      background:linear-gradient(135deg, rgba(78,166,202,.12), rgba(232,201,109,.16));
-      border:1px solid rgba(78,166,202,.18);
-      border-radius:24px;
-      padding:18px;
-    }
-
-    .estimate-price{
-      font-size:2rem;
-      font-weight:900;
-      line-height:1.1;
-      color:var(--dark);
-    }
-
-    .estimate-note{
-      margin-top:8px;
-      color:var(--muted);
-      font-size:.95rem;
-    }
-
-    .btn-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:8px;
-    }
-
-    button{
-      appearance:none;
-      border:none;
-      border-radius:14px;
-      padding:12px 15px;
-      font:inherit;
-      font-weight:800;
-      cursor:pointer;
-      transition:.18s ease;
-    }
-
-    .btn-primary{
-      background:var(--blue);
-      color:#fff;
-    }
-
-    .btn-primary:hover{
-      filter:brightness(.95);
-      transform:translateY(-1px);
-    }
-
-    .btn-secondary{
-      background:rgba(255,255,255,.88);
-      color:var(--dark);
-      border:1px solid rgba(23,48,56,.14);
-    }
-
-    .btn-secondary:hover{
-      transform:translateY(-1px);
-      border-color:rgba(78,166,202,.35);
-    }
-
-    .mini-note{
-      font-size:.92rem;
-      color:var(--muted);
-    }
-
-    .contact-links{
-      display:grid;
-      gap:12px;
-    }
-
-    .contact-item{
-      display:flex;
-      justify-content:space-between;
-      gap:16px;
-      padding:14px 16px;
-      border-radius:18px;
-      background:rgba(255,255,255,.82);
-      border:1px solid rgba(23,48,56,.10);
-    }
-
-    .contact-item strong{color:var(--dark)}
-
-    .footer{
-      padding:26px 18px 40px;
-      text-align:center;
-      color:var(--muted);
-      font-size:.95rem;
-    }
-
-    @media (max-width: 980px){
-      .hero,
-      .calc-wrap,
-      .grid-3,
-      .grid-2,
-      .services-grid{
-        grid-template-columns:1fr;
-      }
-
-      .hero{
-        padding-top:38px;
-      }
-    }
-
-    @media (max-width: 640px){
-      .nav-wrap{
-        padding:10px 12px;
-        justify-content:center;
-      }
-
-      .brand{
-        width:100%;
-        justify-content:center;
-      }
-
-      nav{
-        width:100%;
-        justify-content:center;
-        gap:6px;
-      }
-
-      nav a{
-        padding:8px 10px;
-        font-size:.92rem;
-      }
-
-      section{
-        padding-left:12px;
-        padding-right:12px;
-      }
-
-      .hero{
-        padding-top:28px;
-        gap:16px;
-      }
-
-      .hero h1{
-        font-size:2.25rem;
-      }
-
-      .hero-panel{
-        padding:18px;
-        border-radius:22px;
-      }
-
-      .card{
-        padding:15px;
-        border-radius:18px;
-      }
-
-      .service-card{
-        padding:14px;
-        border-radius:18px;
-        min-height:auto;
-      }
-
-      .estimate-price{
-        font-size:2rem;
-      }
-
-      .btn-row{
-        flex-direction:column;
-      }
-
-      .btn-row button{
-        width:100%;
-      }
-
-      .contact-item{
-        flex-direction:column;
-        align-items:flex-start;
-        gap:4px;
-      }
-
-      textarea{
-        min-height:160px;
-      }
-
-      input,
-      select,
-      textarea{
-        font-size:16px;
-      }
-
-      .hero-badges{
-        gap:8px;
-      }
-
-      .pill{
-        font-size:.9rem;
-        padding:8px 11px;
-      }
-    }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SiistiArki – Siivous &amp; Pihanhoito</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --c-bg:#f6f9f7;
+  --c-surface:#ffffff;
+  --c-surface2:#f0f5f2;
+  --c-border:#dce8e1;
+  --c-accent:#2d7a5b;
+  --c-accent-lt:#e4f2eb;
+  --c-accent-dk:#1a5c42;
+  --c-warm:#e8c96d;
+  --c-warm-lt:#fdf6e3;
+  --c-text:#1a2e26;
+  --c-muted:#5a7268;
+  --c-muted2:#8aa89f;
+  --r:14px;
+  --r-lg:22px;
+  --r-xl:32px;
+  --shadow:0 2px 12px rgba(30,60,45,.07);
+  --shadow-lg:0 8px 32px rgba(30,60,45,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',sans-serif;
+  font-size:16px;
+  line-height:1.65;
+  color:var(--c-text);
+  background:var(--c-bg);
+  overflow-x:hidden;
+}
+h1,h2,h3{font-family:'DM Serif Display',serif;font-weight:400;line-height:1.15}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+
+/* ─── NAV ─── */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(246,249,247,.92);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--c-border);
+}
+.nav-inner{
+  max-width:1100px;margin:0 auto;
+  padding:0 24px;
+  display:flex;align-items:center;justify-content:space-between;
+  height:62px;
+}
+.brand{display:flex;align-items:center;gap:10px;font-family:'DM Serif Display',serif;font-size:1.25rem;color:var(--c-text)}
+.brand-dot{width:30px;height:30px;border-radius:8px;background:var(--c-accent);display:grid;place-items:center}
+.brand-dot svg{fill:white}
+.nav-links{display:flex;gap:4px;align-items:center}
+.nav-links a{
+  padding:7px 13px;border-radius:99px;
+  font-size:.88rem;font-weight:500;color:var(--c-muted);
+  transition:background .18s,color .18s;
+}
+.nav-links a:hover{background:var(--c-accent-lt);color:var(--c-accent-dk)}
+.nav-cta{
+  padding:8px 18px !important;
+  background:var(--c-accent) !important;
+  color:white !important;
+  font-weight:600 !important;
+  border-radius:99px !important;
+  font-size:.88rem !important;
+  transition:filter .18s,transform .18s !important;
+}
+.nav-cta:hover{filter:brightness(1.1) !important;transform:translateY(-1px) !important}
+
+/* ─── HERO ─── */
+.hero{
+  max-width:1100px;margin:0 auto;
+  padding:72px 24px 56px;
+  display:grid;grid-template-columns:1fr 420px;
+  gap:48px;align-items:center;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--c-accent-lt);color:var(--c-accent-dk);
+  padding:6px 14px;border-radius:99px;
+  font-size:.82rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+  margin-bottom:20px;
+}
+.hero-eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--c-accent);flex-shrink:0}
+.hero h1{font-size:clamp(2.6rem,5.5vw,4rem);color:var(--c-text);margin-bottom:18px}
+.hero h1 em{font-style:italic;color:var(--c-accent)}
+.hero-sub{font-size:1.05rem;color:var(--c-muted);max-width:50ch;margin-bottom:28px;line-height:1.75}
+.hero-pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{
+  display:flex;align-items:center;gap:6px;
+  padding:7px 14px;border-radius:99px;
+  border:1px solid var(--c-border);
+  background:var(--c-surface);
+  font-size:.85rem;font-weight:500;color:var(--c-muted);
+}
+.pill svg{width:14px;height:14px;stroke:var(--c-accent);flex-shrink:0}
+.hero-card{
+  background:var(--c-surface);
+  border:1px solid var(--c-border);
+  border-radius:var(--r-xl);
+  box-shadow:var(--shadow-lg);
+  padding:28px;
+  position:relative;overflow:hidden;
+}
+.hero-card::after{
+  content:'';position:absolute;
+  top:-60px;right:-60px;
+  width:180px;height:180px;
+  border-radius:50%;
+  background:var(--c-accent-lt);
+  pointer-events:none;
+}
+.hero-card-label{font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--c-muted2);margin-bottom:10px}
+.hero-card h3{font-family:'DM Serif Display',serif;font-size:1.35rem;margin-bottom:10px;position:relative;z-index:1}
+.hero-card p{font-size:.92rem;color:var(--c-muted);line-height:1.6;position:relative;z-index:1}
+.hero-stat-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+.stat{
+  background:var(--c-surface2);
+  border-radius:var(--r);
+  padding:12px 14px;
+}
+.stat-num{font-family:'DM Serif Display',serif;font-size:1.6rem;color:var(--c-accent)}
+.stat-lbl{font-size:.78rem;color:var(--c-muted);margin-top:2px}
+
+/* ─── SECTIONS ─── */
+section{padding:64px 24px}
+.container{max-width:1100px;margin:0 auto}
+.section-label{
+  display:inline-block;
+  font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--c-accent);margin-bottom:10px;
+}
+.section-title{font-size:clamp(1.7rem,3.5vw,2.4rem);margin-bottom:12px}
+.section-sub{font-size:1rem;color:var(--c-muted);max-width:60ch;margin-bottom:36px;line-height:1.7}
+.divider{border:none;border-top:1px solid var(--c-border);margin:0}
+
+/* ─── SERVICE CARDS ─── */
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.service{
+  background:var(--c-surface);
+  border:1px solid var(--c-border);
+  border-radius:var(--r-lg);
+  padding:26px;
+  box-shadow:var(--shadow);
+  transition:transform .2s,box-shadow .2s;
+}
+.service:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.service-num{
+  width:40px;height:40px;border-radius:10px;
+  background:var(--c-accent-lt);
+  display:grid;place-items:center;
+  font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--c-accent);
+  margin-bottom:16px;
+}
+.service h3{font-size:1.15rem;margin-bottom:8px}
+.service p{font-size:.9rem;color:var(--c-muted);line-height:1.65}
+.service-tag{
+  display:inline-block;margin-top:14px;
+  padding:4px 10px;border-radius:6px;
+  background:var(--c-warm-lt);color:#7a5a10;
+  font-size:.75rem;font-weight:600;
+}
+
+/* ─── ABOUT ─── */
+#meista{background:var(--c-surface)}
+.about-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:24px}
+.person{
+  border:1px solid var(--c-border);border-radius:var(--r-lg);
+  padding:22px;background:var(--c-surface2);
+}
+.avatar{
+  width:52px;height:52px;border-radius:12px;
+  background:var(--c-accent);
+  display:grid;place-items:center;
+  font-family:'DM Serif Display',serif;font-size:1.3rem;color:white;
+  margin-bottom:14px;
+}
+.person h3{font-size:1.05rem;margin-bottom:6px}
+.person p{font-size:.88rem;color:var(--c-muted);line-height:1.6}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.info-card{
+  border:1px solid var(--c-border);border-radius:var(--r-lg);
+  padding:22px;background:var(--c-surface);
+}
+.info-card h3{font-size:1.05rem;margin-bottom:8px}
+.info-card p{font-size:.9rem;color:var(--c-muted)}
+
+/* ─── CALCULATOR ─── */
+#tarjous{background:var(--c-bg)}
+.calc-layout{display:grid;grid-template-columns:1fr 380px;gap:28px;align-items:start}
+
+/* Steps */
+.step-block{
+  background:var(--c-surface);
+  border:1px solid var(--c-border);
+  border-radius:var(--r-lg);
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.step-header{
+  display:flex;align-items:center;gap:14px;
+  padding:18px 22px;
+  border-bottom:1px solid var(--c-border);
+  background:var(--c-surface2);
+  cursor:pointer;
+  user-select:none;
+}
+.step-num{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--c-accent-lt);
+  display:grid;place-items:center;
+  font-size:.82rem;font-weight:700;color:var(--c-accent);
+  flex-shrink:0;
+  transition:background .18s,color .18s;
+}
+.step-num.done{background:var(--c-accent);color:white}
+.step-header h3{font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;flex:1}
+.step-chevron{width:18px;height:18px;stroke:var(--c-muted2);transition:transform .25s;flex-shrink:0}
+.step-chevron.open{transform:rotate(180deg)}
+.step-body{
+  padding:22px;
+  display:none;
+}
+.step-body.open{display:block}
+
+/* Contact fields */
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field{display:grid;gap:6px}
+.field label{font-size:.82rem;font-weight:600;color:var(--c-muted)}
+.field input,.field select,.field textarea{
+  padding:10px 14px;
+  border:1px solid var(--c-border);
+  border-radius:var(--r);
+  font-family:'DM Sans',sans-serif;
+  font-size:.95rem;
+  color:var(--c-text);
+  background:var(--c-surface);
+  outline:none;
+  transition:border-color .18s,box-shadow .18s;
+  width:100%;
+}
+.field input:focus,.field select:focus,.field textarea:focus{
+  border-color:var(--c-accent);
+  box-shadow:0 0 0 3px rgba(45,122,91,.12);
+}
+.field textarea{min-height:90px;resize:vertical}
+
+/* Service selector */
+.svc-list{display:grid;gap:10px}
+.svc-item{
+  border:1px solid var(--c-border);
+  border-radius:var(--r);
+  overflow:hidden;
+  transition:border-color .18s;
+}
+.svc-item.checked{border-color:var(--c-accent)}
+.svc-top{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:14px 16px;
+  cursor:pointer;
+}
+.svc-check{
+  width:20px;height:20px;
+  border:1.5px solid var(--c-border);
+  border-radius:5px;flex-shrink:0;margin-top:1px;
+  display:grid;place-items:center;
+  transition:background .15s,border-color .15s;
+  background:var(--c-surface);
+}
+.svc-check.on{background:var(--c-accent);border-color:var(--c-accent)}
+.svc-check svg{display:none;width:12px;height:12px;stroke:white;stroke-width:2.5}
+.svc-check.on svg{display:block}
+.svc-info h4{font-size:.95rem;font-weight:600;margin-bottom:2px}
+.svc-info p{font-size:.83rem;color:var(--c-muted)}
+.svc-sub{
+  display:none;
+  padding:14px 16px;
+  border-top:1px dashed var(--c-border);
+  background:var(--c-surface2);
+}
+.svc-sub.open{display:block}
+.sub-label{font-size:.8rem;font-weight:600;color:var(--c-muted);margin-bottom:8px}
+.checkbox-list{display:grid;gap:7px}
+.cb-item{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 12px;border-radius:10px;
+  background:var(--c-surface);
+  border:1px solid var(--c-border);
+  cursor:pointer;font-size:.88rem;
+  transition:border-color .15s;
+}
+.cb-item:hover{border-color:var(--c-accent)}
+.cb-item input{width:16px;height:16px;accent-color:var(--c-accent);flex-shrink:0}
+.size-select{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+  margin-bottom:12px;
+}
+.size-btn{
+  padding:8px 6px;border-radius:10px;
+  border:1px solid var(--c-border);
+  background:var(--c-surface);
+  font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;
+  cursor:pointer;text-align:center;color:var(--c-muted);
+  transition:all .15s;
+}
+.size-btn.active{
+  background:var(--c-accent-lt);
+  border-color:var(--c-accent);
+  color:var(--c-accent-dk);font-weight:600;
+}
+.mini-note{font-size:.78rem;color:var(--c-muted2);margin-top:8px}
+
+/* Extras */
+.extras-grid{display:grid;gap:8px;margin-top:2px}
+.extra-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;border-radius:10px;
+  background:var(--c-surface2);
+  border:1px solid var(--c-border);
+  cursor:pointer;
+}
+.extra-left{display:flex;align-items:center;gap:10px;font-size:.9rem;font-weight:500}
+.extra-left input{width:16px;height:16px;accent-color:var(--c-accent)}
+.extra-price{font-size:.8rem;font-weight:600;color:var(--c-accent)}
+
+/* Steps container */
+.steps-stack{display:grid;gap:12px}
+
+/* Sticky summary */
+.summary-card{
+  position:sticky;top:82px;
+  background:var(--c-surface);
+  border:1px solid var(--c-border);
+  border-radius:var(--r-lg);
+  box-shadow:var(--shadow-lg);
+  overflow:hidden;
+}
+.summary-top{
+  background:var(--c-accent);
+  padding:22px;
+  color:white;
+}
+.summary-top .lbl{font-size:.75rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;opacity:.75;margin-bottom:6px}
+.price-big{font-family:'DM Serif Display',serif;font-size:2.8rem;line-height:1}
+.price-note{font-size:.8rem;opacity:.7;margin-top:6px}
+.summary-body{padding:20px}
+.breakdown{display:grid;gap:8px;margin-bottom:16px}
+.breakdown-item{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:.88rem;padding:8px 10px;
+  border-radius:8px;background:var(--c-surface2);
+}
+.breakdown-item.empty{color:var(--c-muted2);font-style:italic;background:none;padding:0}
+.bk-name{color:var(--c-muted);font-weight:400}
+.bk-price{font-weight:600;color:var(--c-text)}
+.discount-row{
+  display:flex;justify-content:space-between;
+  font-size:.83rem;color:var(--c-accent);font-weight:600;
+  padding:6px 10px;
+  background:var(--c-accent-lt);border-radius:8px;
+  margin-bottom:8px;display:none;
+}
+.total-row{
+  display:flex;justify-content:space-between;
+  font-size:.92rem;font-weight:700;
+  padding:10px 10px;
+  border-top:1px solid var(--c-border);
+  margin-top:4px;
+}
+
+.msg-section{padding:20px;border-top:1px solid var(--c-border)}
+.msg-label{font-size:.78rem;font-weight:600;color:var(--c-muted);letter-spacing:.04em;text-transform:uppercase;margin-bottom:8px}
+#message{
+  width:100%;min-height:120px;
+  padding:10px 12px;
+  font-family:'DM Sans',sans-serif;font-size:.82rem;line-height:1.5;
+  color:var(--c-muted);
+  background:var(--c-surface2);
+  border:1px solid var(--c-border);border-radius:var(--r);
+  resize:vertical;outline:none;
+}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.btn{
+  padding:11px 8px;border:none;
+  border-radius:10px;
+  font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;
+  cursor:pointer;transition:filter .15s,transform .15s;
+  text-align:center;
+}
+.btn-primary{background:var(--c-accent);color:white}
+.btn-primary:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btn-ghost{background:var(--c-surface2);color:var(--c-text);border:1px solid var(--c-border)}
+.btn-ghost:hover{border-color:var(--c-accent);color:var(--c-accent);transform:translateY(-1px)}
+
+/* ─── CONTACT ─── */
+#yhteys{background:var(--c-surface)}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:560px}
+.contact-row{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 18px;border-radius:var(--r);
+  background:var(--c-surface2);border:1px solid var(--c-border);
+}
+.c-icon{
+  width:36px;height:36px;border-radius:8px;
+  background:var(--c-accent-lt);
+  display:grid;place-items:center;flex-shrink:0;
+}
+.c-icon svg{width:18px;height:18px;stroke:var(--c-accent)}
+.c-label{font-size:.75rem;font-weight:600;color:var(--c-muted2);display:block;margin-bottom:2px}
+.c-val{font-size:.92rem;font-weight:500}
+.c-val a{color:var(--c-accent)}
+
+/* ─── FOOTER ─── */
+footer{
+  padding:28px 24px;
+  border-top:1px solid var(--c-border);
+  display:flex;align-items:center;justify-content:space-between;
+  max-width:1100px;margin:0 auto;
+  color:var(--c-muted2);font-size:.82rem;
+}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;gap:32px}
+  .hero-card{max-width:100%}
+  .services-grid{grid-template-columns:1fr}
+  .about-grid{grid-template-columns:1fr}
+  .info-grid{grid-template-columns:1fr}
+  .calc-layout{grid-template-columns:1fr}
+  .summary-card{position:static}
+  .contact-grid{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .nav-links{display:none}
+  section{padding:48px 16px}
+  .hero{padding:48px 16px 36px}
+  .field-grid{grid-template-columns:1fr}
+  .btn-row{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body>
 
-<header>
-  <div class="nav-wrap">
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
     <div class="brand">
-      <div class="brand-mark"></div>
-      <div>SiistiArki</div>
+      <div class="brand-dot">
+        <svg width="16" height="16" viewBox="0 0 16 16"><path d="M8 1.5A6.5 6.5 0 1 0 14.5 8 6.507 6.507 0 0 0 8 1.5ZM3.75 8A4.25 4.25 0 1 1 8 12.25 4.255 4.255 0 0 1 3.75 8Z"/></svg>
+      </div>
+      SiistiArki
     </div>
-    <nav>
-      <a href="#etusivu">Etusivu</a>
+    <div class="nav-links">
       <a href="#palvelut">Palvelut</a>
       <a href="#meista">Meistä</a>
       <a href="#tarjous">Hintalaskuri</a>
-      <a href="#yhteys">Yhteys</a>
-    </nav>
-  </div>
-</header>
-
-<section class="hero" id="etusivu">
-  <div>
-    <h1>SiistiArki</h1>
-    <p>
-      Kesäkauden siivous- ja pihatöitä pääkaupunkiseudulla. Teemme arjesta siistimpää,
-      kevyempää ja helpommin hallittavaa ilman turhaa säätöä.
-    </p>
-
-    <div class="hero-badges">
-      <span class="pill">Pääkaupunkiseutu</span>
-      <span class="pill">Kesätyöt</span>
-      <span class="pill">Selkeä viestintä</span>
-      <span class="pill">Ei verkkotilauksia</span>
+      <a href="#yhteys" class="nav-cta">Yhteys</a>
     </div>
   </div>
+</nav>
 
-  <div class="hero-panel">
-    <h3 style="margin:0 0 10px;">Nopea yhteydenotto</h3>
-    <p style="margin:0;color:var(--muted);">
-      Asiakas rakentaa viestin valmiiksi, saa suuntaa antavan hinta-arvion ja voi kopioida
-      viestin tai avata sähköpostin yhdellä napilla.
-    </p>
+<!-- HERO -->
+<section id="etusivu" style="padding:0">
+  <div class="hero">
+    <div>
+      <div class="hero-eyebrow">Pääkaupunkiseutu · Kesä 2025</div>
+      <h1>Siisti arki<br>alkaa <em>tästä</em></h1>
+      <p class="hero-sub">Siivous, pihanhoito ja järjestely kotisi lähellä. Hommat sovitaan selkeästi, tehdään huolella ja laskutetaan rehellisesti.</p>
+      <div class="hero-pills">
+        <span class="pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          Helsinki, Espoo, Vantaa
+        </span>
+        <span class="pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Kesätöitä 2025
+        </span>
+        <span class="pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 11.5a19.79 19.79 0 0 1-3-8.59A2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          Selkeä viestintä
+        </span>
+      </div>
+    </div>
+    <div>
+      <div class="hero-card">
+        <div class="hero-card-label">Nopea arvio</div>
+        <h3>Laske hinta-arvio ja lähetä viesti suoraan</h3>
+        <p>Täytä tiedot hintalaskuriin, näet arvion heti ja voit kopioida valmiin viestin tai avata sähköpostin yhdellä klikillä.</p>
+        <div class="hero-stat-row">
+          <div class="stat">
+            <div class="stat-num">3</div>
+            <div class="stat-lbl">palvelua tarjolla</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">PKS</div>
+            <div class="stat-lbl">alue kattaa</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
+<hr class="divider"/>
+
+<!-- PALVELUT -->
 <section id="palvelut">
   <div class="container">
-    <h2 class="section-title">Palvelut</h2>
-    <p class="section-lead">
-      Tässä on meidän kesäkauden palvelut. Työ tehdään selkeästi sovitun mukaan, ja osa työstä
-      tehdään asiakkaan välineillä, jotta kokonaisuus pysyy järkevänä.
-    </p>
-
-    <div class="grid grid-3">
-      <div class="card feature">
-        <div class="feature-icon">1</div>
-        <div>
-          <h3>Järjestely ja karsiminen</h3>
-          <p>Tavaroiden järjestelyä, ylimääräisen tavaran karsimista ja tilojen selkeyttämistä.</p>
-        </div>
+    <div class="section-label">Palvelut</div>
+    <h2 class="section-title">Mitä teemme?</h2>
+    <p class="section-sub">Kolme selkeää palvelua. Työ sovitaan aina etukäteen ja osa tehdään asiakkaan välineillä, jotta hinnat pysyvät järkevinä.</p>
+    <div class="services-grid">
+      <div class="service">
+        <div class="service-num">1</div>
+        <h3>Järjestely ja karsiminen</h3>
+        <p>Tavaroiden lajittelu, kaappien ja varastojen järjestely sekä ylimääräisen karsiminen. Työn laajuus sovitaan etukäteen.</p>
+        <span class="service-tag">Asiakkaan välineet</span>
       </div>
-
-      <div class="card feature">
-        <div class="feature-icon">2</div>
-        <div>
-          <h3>Pihanhoito</h3>
-          <p>Ruohonleikkuu, lehtien keräys ja roskien siivous asiakkaan välineillä.</p>
-        </div>
+      <div class="service">
+        <div class="service-num">2</div>
+        <h3>Pihanhoito</h3>
+        <p>Ruohonleikkuu, lehtien keräys ja roskien siivous. Käytetään asiakkaan omia pihakoneita ja välineitä.</p>
+        <span class="service-tag">Asiakkaan välineet</span>
       </div>
-
-      <div class="card feature">
-        <div class="feature-icon">3</div>
-        <div>
-          <h3>Kotisiivous</h3>
-          <p>Perussiivous, jossa käytetään asiakkaan omia siivousvälineitä ja imuria.</p>
-        </div>
+      <div class="service">
+        <div class="service-num">3</div>
+        <h3>Kotisiivous</h3>
+        <p>Perussiivous huolellisesti. Käytetään asiakkaan omia siivousvälineitä ja imuria, emme tuo omia.</p>
+        <span class="service-tag">Asiakkaan välineet</span>
       </div>
     </div>
   </div>
 </section>
 
+<hr class="divider"/>
+
+<!-- MEISTÄ -->
 <section id="meista">
   <div class="container">
-    <h2 class="section-title">Meistä</h2>
-    <p class="section-lead">
-      SiistiArki on pieni porukka, jossa jokaisella on oma rooli. Tähän voi myöhemmin vaihtaa
-      oikeat nimet ja kuvat.
-    </p>
-
-    <div class="grid grid-3">
-      <div class="card about-person">
+    <div class="section-label">Meistä</div>
+    <h2 class="section-title">Pieni porukka, selkeä työ</h2>
+    <p class="section-sub">SiistiArki on kesätöitä tekevä pienporukka pääkaupunkiseudulta. Nimet ja kuvat päivitetään myöhemmin.</p>
+    <div class="about-grid">
+      <div class="person">
         <div class="avatar">A</div>
-        <div>
-          <h3>Asiakasyhteydet</h3>
-          <p>Vastaa viesteihin, sopii aikatauluista ja varmistaa työn tiedot ennen aloitusta.</p>
-        </div>
+        <h3>Asiakasyhteydet</h3>
+        <p>Vastaa viesteihin, sopii aikatauluista ja varmistaa, että työn tiedot ovat selkeät ennen aloitusta.</p>
       </div>
-
-      <div class="card about-person">
+      <div class="person">
         <div class="avatar">B</div>
-        <div>
-          <h3>Siivous</h3>
-          <p>Hoitaa kotisiivoukset ja tarkistaa, että työ tehdään huolellisesti alusta loppuun.</p>
-        </div>
+        <h3>Siivous</h3>
+        <p>Hoitaa kotisiivoukset ja tarkistaa työn laadun alusta loppuun.</p>
       </div>
-
-      <div class="card about-person">
+      <div class="person">
         <div class="avatar">C</div>
-        <div>
-          <h3>Pihatyöt</h3>
-          <p>Keskittyy pihatöihin, kuten ruohonleikkuu, lehdet ja roskien keräys.</p>
-        </div>
+        <h3>Pihatyöt</h3>
+        <p>Vastaa pihatöistä: ruohonleikkuu, lehdet ja roskien keräys.</p>
       </div>
     </div>
-
-    <div class="grid grid-2" style="margin-top:18px;">
-      <div class="card">
+    <div class="info-grid">
+      <div class="info-card">
         <h3>Toimintatapa</h3>
-        <p>
-          Työ sovitaan aina etukäteen viestillä tai puhelimitse. Näin asiakas tietää mitä tilaa
-          ja me saadaan tehtyä työ järkevästi.
-        </p>
+        <p>Työ sovitaan aina etukäteen viestillä tai puhelimitse, jotta molemmat tietävät tarkalleen mitä tehdään ja milloin.</p>
       </div>
-      <div class="card">
+      <div class="info-card">
         <h3>Alue</h3>
-        <p>
-          Otamme töitä vain pääkaupunkiseudulta. Jos sijainti on sen ulkopuolella, pyyntöä ei
-          käsitellä.
-        </p>
+        <p>Otamme töitä vain pääkaupunkiseudulta – Helsinki, Espoo ja Vantaa. Alueen ulkopuolisia pyyntöjä ei käsitellä.</p>
       </div>
     </div>
   </div>
 </section>
 
+<hr class="divider"/>
+
+<!-- HINTALASKURI -->
 <section id="tarjous">
   <div class="container">
-    <h2 class="section-title">Hintalaskuri ja viestin rakentaja</h2>
-    <p class="section-lead">
-      Tämä on vain arvio, ei lopullinen hinta. Lopullinen hinta sovitaan ennen työn aloitusta,
-      koska kohteet ja työmäärä vaihtelevat.
-    </p>
+    <div class="section-label">Hintalaskuri</div>
+    <h2 class="section-title">Laske arvio ja lähetä viesti</h2>
+    <p class="section-sub">Hinnat ovat arvioita. Lopullinen hinta sovitaan aina ennen työn aloitusta.</p>
 
-    <div class="calc-wrap">
-      <div class="card stack">
-        <div class="form-grid">
-          <div class="field">
-            <label for="firstname">Etunimi</label>
-            <input id="firstname" type="text" placeholder="Etunimi">
+    <div class="calc-layout">
+      <!-- LEFT: Steps -->
+      <div class="steps-stack">
+
+        <!-- Step 1: Contact info -->
+        <div class="step-block">
+          <div class="step-header" onclick="toggleStep(this)">
+            <div class="step-num" id="num1">1</div>
+            <h3>Yhteystiedot</h3>
+            <svg class="step-chevron open" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
-
-          <div class="field">
-            <label for="lastname">Sukunimi</label>
-            <input id="lastname" type="text" placeholder="Sukunimi">
-          </div>
-
-          <div class="field">
-            <label for="city">Kaupunki / alue</label>
-            <input id="city" type="text" placeholder="Esim. Helsinki, Espoo, Vantaa">
-          </div>
-
-          <div class="field">
-            <label for="email">Sähköposti</label>
-            <input id="email" type="email" placeholder="nimi@esimerkki.fi">
-          </div>
-
-          <div class="field">
-            <label for="phone">Puhelin</label>
-            <input id="phone" type="tel" placeholder="040 123 4567">
+          <div class="step-body open">
+            <div class="field-grid">
+              <div class="field">
+                <label for="firstname">Etunimi</label>
+                <input id="firstname" type="text" placeholder="Etunimi" oninput="update()"/>
+              </div>
+              <div class="field">
+                <label for="lastname">Sukunimi</label>
+                <input id="lastname" type="text" placeholder="Sukunimi" oninput="update()"/>
+              </div>
+              <div class="field">
+                <label for="city">Kaupunki / alue</label>
+                <input id="city" type="text" placeholder="Helsinki, Espoo, Vantaa…" oninput="update()"/>
+              </div>
+              <div class="field">
+                <label for="email">Sähköposti</label>
+                <input id="email" type="email" placeholder="nimi@esimerkki.fi" oninput="update()"/>
+              </div>
+              <div class="field">
+                <label for="phone">Puhelin</label>
+                <input id="phone" type="tel" placeholder="040 123 4567" oninput="update()"/>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div>
-          <div class="group-title">Valitse palvelut</div>
-          <div class="services-grid" style="margin-top:10px;">
-            <div class="service-card">
-              <label class="service-top" for="svc-organize">
-                <input id="svc-organize" type="checkbox" value="organize">
-                <div>
-                  <span class="service-title">Järjestely ja karsiminen</span>
-                  <p class="service-desc">Hinta määräytyy työn laajuuden mukaan.</p>
-                </div>
-              </label>
+        <!-- Step 2: Services -->
+        <div class="step-block">
+          <div class="step-header" onclick="toggleStep(this)">
+            <div class="step-num" id="num2">2</div>
+            <h3>Valitse palvelut</h3>
+            <svg class="step-chevron open" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="step-body open">
+            <div class="svc-list">
 
-              <div class="sub-box" id="organizeBox">
-                <div class="sub-grid">
-                  <div class="field" style="margin:0;">
-                    <label for="organize-size">Työn määrä</label>
-                    <select id="organize-size">
-                      <option value="small">Pieni</option>
-                      <option value="medium">Keskikokoinen</option>
-                      <option value="large">Laaja</option>
-                    </select>
+              <!-- Järjestely -->
+              <div class="svc-item" id="item-organize">
+                <div class="svc-top" onclick="toggleSvc('organize')">
+                  <div class="svc-check" id="chk-organize">
+                    <svg viewBox="0 0 14 14" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 7 5.5 10.5 12 3"/></svg>
                   </div>
-
+                  <div class="svc-info">
+                    <h4>Järjestely ja karsiminen</h4>
+                    <p>Tavaroiden lajittelu, kaappien järjestely, ylimääräisen poisto</p>
+                  </div>
+                </div>
+                <div class="svc-sub" id="sub-organize">
+                  <div class="sub-label">Työn laajuus</div>
+                  <div class="size-select">
+                    <button class="size-btn active" data-svc="organize" data-size="small" onclick="setSize(this)">Pieni<br><small>~20€</small></button>
+                    <button class="size-btn" data-svc="organize" data-size="medium" onclick="setSize(this)">Keski<br><small>~40€</small></button>
+                    <button class="size-btn" data-svc="organize" data-size="large" onclick="setSize(this)">Laaja<br><small>~65€</small></button>
+                  </div>
+                  <div class="sub-label">Mitä sisältyy?</div>
                   <div class="checkbox-list">
-                    <label class="checkbox-item">
-                      <input type="checkbox" id="organize-sort">
-                      Tavaroiden lajittelu
-                    </label>
-
-                    <label class="checkbox-item">
-                      <input type="checkbox" id="organize-storage">
-                      Kaappien tai varaston järjestely
-                    </label>
-
-                    <label class="checkbox-item">
-                      <input type="checkbox" id="organize-trash">
-                      Ylimääräisten tavaroiden poisto
-                    </label>
+                    <label class="cb-item"><input type="checkbox" id="organize-sort" onchange="update()"> Tavaroiden lajittelu <small style="margin-left:auto;color:var(--c-accent);font-weight:600">+10€</small></label>
+                    <label class="cb-item"><input type="checkbox" id="organize-storage" onchange="update()"> Kaappien tai varaston järjestely <small style="margin-left:auto;color:var(--c-accent);font-weight:600">+15€</small></label>
+                    <label class="cb-item"><input type="checkbox" id="organize-trash" onchange="update()"> Ylimääräisten tavaroiden poisto <small style="margin-left:auto;color:var(--c-accent);font-weight:600">+20€</small></label>
                   </div>
-
-                  <div class="mini-note">Käytetään asiakkaan välineitä, ellei toisin sovita.</div>
+                  <div class="mini-note">Käytetään asiakkaan välineitä ellei toisin sovita.</div>
                 </div>
               </div>
-            </div>
 
-            <div class="service-card">
-              <label class="service-top" for="svc-yard">
-                <input id="svc-yard" type="checkbox" value="yard">
-                <div>
-                  <span class="service-title">Pihanhoito</span>
-                  <p class="service-desc">Voit valita useamman pihatyön samaan aikaan.</p>
+              <!-- Pihanhoito -->
+              <div class="svc-item" id="item-yard">
+                <div class="svc-top" onclick="toggleSvc('yard')">
+                  <div class="svc-check" id="chk-yard">
+                    <svg viewBox="0 0 14 14" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 7 5.5 10.5 12 3"/></svg>
+                  </div>
+                  <div class="svc-info">
+                    <h4>Pihanhoito</h4>
+                    <p>Ruohonleikkuu, lehtien keräys, roskien siivous</p>
+                  </div>
                 </div>
-              </label>
-
-              <div class="sub-box" id="yardBox">
-                <div class="sub-grid">
-                  <div class="group-title" style="font-size:.98rem;">Mitä pihassa tehdään?</div>
+                <div class="svc-sub" id="sub-yard">
+                  <div class="sub-label">Mitä pihassa tehdään?</div>
                   <div class="checkbox-list">
-                    <label class="checkbox-item"><input type="checkbox" id="yard-grass"> Ruohonleikkuu</label>
-                    <label class="checkbox-item"><input type="checkbox" id="yard-leaves"> Lehtien keräys</label>
-                    <label class="checkbox-item"><input type="checkbox" id="yard-trash"> Roskien siivous</label>
+                    <label class="cb-item"><input type="checkbox" id="yard-grass" onchange="update()"> Ruohonleikkuu <small style="margin-left:auto;color:var(--c-accent);font-weight:600">25€</small></label>
+                    <label class="cb-item"><input type="checkbox" id="yard-leaves" onchange="update()"> Lehtien keräys <small style="margin-left:auto;color:var(--c-accent);font-weight:600">18€</small></label>
+                    <label class="cb-item"><input type="checkbox" id="yard-trash" onchange="update()"> Roskien siivous <small style="margin-left:auto;color:var(--c-accent);font-weight:600">15€</small></label>
                   </div>
-                  <div class="mini-note">Käytetään asiakkaan varusteita.</div>
+                  <div class="mini-note">Käytetään asiakkaan varusteita. Useampi työ = pieni alennus.</div>
+                </div>
+              </div>
+
+              <!-- Kotisiivous -->
+              <div class="svc-item" id="item-clean">
+                <div class="svc-top" onclick="toggleSvc('clean')">
+                  <div class="svc-check" id="chk-clean">
+                    <svg viewBox="0 0 14 14" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 7 5.5 10.5 12 3"/></svg>
+                  </div>
+                  <div class="svc-info">
+                    <h4>Kotisiivous</h4>
+                    <p>Perussiivous – välineet ja imuri asiakkaalta</p>
+                  </div>
+                </div>
+                <div class="svc-sub" id="sub-clean">
+                  <div class="sub-label">Asunnon koko</div>
+                  <div class="size-select">
+                    <button class="size-btn active" data-svc="clean" data-size="small" onclick="setSize(this)">Pieni<br><small>~35€</small></button>
+                    <button class="size-btn" data-svc="clean" data-size="medium" onclick="setSize(this)">Keski<br><small>~55€</small></button>
+                    <button class="size-btn" data-svc="clean" data-size="large" onclick="setSize(this)">Suuri<br><small>~80€</small></button>
+                  </div>
+                  <div class="mini-note">Emme tuo imuria. Asuntoon tarvitaan omat siivousvälineet.</div>
                 </div>
               </div>
             </div>
+          </div>
+        </div>
 
-            <div class="service-card">
-              <label class="service-top" for="svc-clean">
-                <input id="svc-clean" type="checkbox" value="clean">
-                <div>
-                  <span class="service-title">Kotisiivous</span>
-                  <p class="service-desc">Perussiivous, välineet asiakkaalta.</p>
-                </div>
+        <!-- Step 3: Extras -->
+        <div class="step-block">
+          <div class="step-header" onclick="toggleStep(this)">
+            <div class="step-num" id="num3">3</div>
+            <h3>Lisävalinnat ja tarkennukset</h3>
+            <svg class="step-chevron open" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="step-body open">
+            <div class="extras-grid">
+              <label class="extra-item">
+                <div class="extra-left"><input type="checkbox" id="weekend" onchange="update()"> Viikonlopputyö</div>
+                <span class="extra-price">+25€</span>
               </label>
-
-              <div class="sub-box" id="cleanBox">
-                <div class="sub-grid">
-                  <div class="field" style="margin:0;">
-                    <label for="clean-size">Kohteen koko</label>
-                    <select id="clean-size">
-                      <option value="small">Pieni asunto</option>
-                      <option value="medium">Keskikokoinen asunto</option>
-                      <option value="large">Suuri asunto</option>
-                    </select>
-                  </div>
-                  <div class="mini-note">Imuria emme tuo mukana.</div>
-                </div>
-              </div>
+            </div>
+            <div class="field" style="margin-top:14px">
+              <label for="details">Lisätiedot ja aikataulutoive</label>
+              <textarea id="details" placeholder="Tarkka osoite, aikataulutoive, erityishuomiot…" oninput="update()"></textarea>
             </div>
           </div>
         </div>
 
-        <div class="grid grid-2">
-          <div class="field">
-            <label for="weekend">Lisävalinta</label>
-            <label class="checkbox-item" style="margin:0;">
-              <input type="checkbox" id="weekend">
-              Viikonloppu (+25€)
-            </label>
-          </div>
+      </div><!-- /steps-stack -->
 
-          <div class="field">
-            <label for="outsideTool">Tarkennus välineistä</label>
-            <select id="outsideTool">
-              <option value="customer">Käytetään asiakkaan välineitä</option>
-              <option value="partly">Osa välineistä asiakkaalta, osa sovitaan erikseen</option>
-            </select>
+      <!-- RIGHT: Summary -->
+      <div>
+        <div class="summary-card">
+          <div class="summary-top">
+            <div class="lbl">Arvioitu hinta</div>
+            <div class="price-big" id="price-display">0 €</div>
+            <div class="price-note">Arvio – lopullinen hinta sovitaan ennen työtä</div>
           </div>
-        </div>
-
-        <div class="field">
-          <label for="details">Lisätiedot</label>
-          <textarea id="details" placeholder="Kerro tähän esimerkiksi tarkempi paikka, aikataulutoive, erityiset huomautukset tai muut tiedot."></textarea>
+          <div class="summary-body">
+            <div class="breakdown" id="breakdown">
+              <div class="breakdown-item empty" id="empty-row">Ei valittuja palveluja</div>
+            </div>
+            <div class="discount-row" id="discount-row">
+              <span>Usean palvelun alennus</span>
+              <span id="discount-val">–0€</span>
+            </div>
+            <div class="total-row">
+              <span>Yhteensä (arvio)</span>
+              <span id="total-val">0 €</span>
+            </div>
+          </div>
+          <div class="msg-section">
+            <div class="msg-label">Valmis viesti</div>
+            <textarea id="message" readonly placeholder="Viesti muodostuu automaattisesti valintojesi perusteella…"></textarea>
+            <div class="btn-row">
+              <button class="btn btn-primary" onclick="copyMsg()">Kopioi viesti</button>
+              <button class="btn btn-ghost" onclick="sendMail()">Avaa sähköposti</button>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="card estimate">
-        <div class="estimate-box">
-          <div class="mini-note">Arvioitu hinta</div>
-          <div class="estimate-price" id="price">~ 0€</div>
-          <div class="estimate-note">
-            Tämä on vain arvio. Lopullinen hinta sovitaan ennen työn alkua.
-          </div>
-        </div>
-
-        <div class="card" style="box-shadow:none; background:rgba(255,255,255,.68);">
-          <div class="mini-note" style="margin-bottom:8px;">Luotu viesti</div>
-          <textarea id="message" readonly placeholder="Viesti muodostuu tähän automaattisesti."></textarea>
-          <div class="btn-row">
-            <button class="btn-primary" type="button" onclick="copyMsg()">Kopioi viesti</button>
-            <button class="btn-secondary" type="button" onclick="sendMail()">Avaa sähköposti</button>
-          </div>
-        </div>
-
-        <div class="card" style="box-shadow:none; background:rgba(255,255,255,.68);">
-          <h3 style="margin-top:0;">Huomio</h3>
-          <p class="mini-note">
-            Pihatyöt tehdään asiakkaan välineillä. Siivouksessa emme tuo imuria. Jos tiedot eivät
-            riitä, yhteydenottoa pyydetään täydentämään ennen työn sopimista.
-          </p>
-        </div>
-      </div>
-    </div>
+    </div><!-- /calc-layout -->
   </div>
 </section>
 
+<hr class="divider"/>
+
+<!-- YHTEYS -->
 <section id="yhteys">
   <div class="container">
-    <h2 class="section-title">Yhteys</h2>
-    <p class="section-lead">
-      Yhteyden saa sähköpostilla tai Instagramilla.
-    </p>
-
-    <div class="contact-links">
-      <div class="contact-item">
-        <strong>Sähköposti</strong>
-        <span>
-          <a href="mailto:siistiarkiinfo@gmail.com">siistiarkiinfo@gmail.com</a>
-        </span>
+    <div class="section-label">Yhteys</div>
+    <h2 class="section-title">Ota yhteyttä</h2>
+    <p class="section-sub">Sähköpostilla tai Instagramilla – vastataan nopeasti.</p>
+    <div class="contact-grid">
+      <div class="contact-row">
+        <div class="c-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
+        </div>
+        <div>
+          <span class="c-label">Sähköposti</span>
+          <span class="c-val"><a href="mailto:siistiarkiinfo@gmail.com">siistiarkiinfo@gmail.com</a></span>
+        </div>
       </div>
-      <div class="contact-item"><strong>Puhelin</strong><span>040 123 4567</span></div>
-      <div class="contact-item">
-        <strong>Instagram</strong>
-        <span>
-          <a 
-            href="https://www.instagram.com/siisti.arki/" 
-            target="_blank" 
-            style="color:var(--blue); font-weight:700; text-decoration:none;"
-          >
-            @siisti.arki
-          </a>
-        </span>
+      <div class="contact-row">
+        <div class="c-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 11.5a19.79 19.79 0 0 1-3-8.59A2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </div>
+        <div>
+          <span class="c-label">Puhelin</span>
+          <span class="c-val">040 123 4567</span>
+        </div>
       </div>
-      <div class="contact-item"><strong>Discord</strong><span>SiistiArki</span></div>
+      <div class="contact-row">
+        <div class="c-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".5" fill="currentColor"/></svg>
+        </div>
+        <div>
+          <span class="c-label">Instagram</span>
+          <span class="c-val"><a href="https://www.instagram.com/siisti.arki/" target="_blank">@siisti.arki</a></span>
+        </div>
+      </div>
+      <div class="contact-row">
+        <div class="c-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/></svg>
+        </div>
+        <div>
+          <span class="c-label">Discord</span>
+          <span class="c-val">SiistiArki</span>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<div class="footer">SiistiArki</div>
+<hr class="divider"/>
+<div style="max-width:1100px;margin:0 auto">
+  <footer>
+    <span>© 2025 SiistiArki</span>
+    <span>Pääkaupunkiseutu</span>
+  </footer>
+</div>
 
 <script>
-  const svcOrganize = document.getElementById("svc-organize");
-  const svcYard = document.getElementById("svc-yard");
-  const svcClean = document.getElementById("svc-clean");
+const svcState = { organize: false, yard: false, clean: false };
+const sizeState = { organize: 'small', clean: 'small' };
 
-  const organizeBox = document.getElementById("organizeBox");
-  const yardBox = document.getElementById("yardBox");
-  const cleanBox = document.getElementById("cleanBox");
+const prices = {
+  organize: { small:20, medium:40, large:65 },
+  clean: { small:35, medium:55, large:80 },
+  yard: { grass:25, leaves:18, trash:15 },
+  extras: { sort:10, storage:15, trash:20 },
+  weekend: 25,
+  base: 10
+};
 
-  const allInputs = document.querySelectorAll("input, select, textarea");
+function toggleSvc(id) {
+  svcState[id] = !svcState[id];
+  const chk = document.getElementById('chk-' + id);
+  const sub = document.getElementById('sub-' + id);
+  const item = document.getElementById('item-' + id);
+  chk.classList.toggle('on', svcState[id]);
+  sub.classList.toggle('open', svcState[id]);
+  item.classList.toggle('checked', svcState[id]);
+  update();
+}
 
-  const priceState = {
-    organize: { small: 20, medium: 40, large: 65 },
-    yard: { grass: 25, leaves: 18, trash: 15 },
-    clean: { small: 35, medium: 55, large: 80 }
-  };
+function setSize(btn) {
+  const svc = btn.dataset.svc;
+  const size = btn.dataset.size;
+  sizeState[svc] = size;
+  document.querySelectorAll('[data-svc="'+svc+'"]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  update();
+}
 
-  allInputs.forEach(el => {
-    el.addEventListener("input", update);
-    el.addEventListener("change", update);
-  });
+function toggleStep(header) {
+  const body = header.nextElementSibling;
+  const chevron = header.querySelector('.step-chevron');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chevron.classList.toggle('open', !isOpen);
+}
 
-  function selectedServices() {
-    const list = [];
-    if (svcOrganize.checked) list.push("Järjestely ja karsiminen");
-    if (svcYard.checked) list.push("Pihanhoito");
-    if (svcClean.checked) list.push("Kotisiivous");
-    return list;
+function v(id) { return document.getElementById(id); }
+function checked(id) { return v(id) ? v(id).checked : false; }
+
+function calcTotal() {
+  let total = 0;
+  const breakdown = [];
+  const active = Object.values(svcState).filter(Boolean).length;
+
+  if (svcState.organize) {
+    let sub = prices.organize[sizeState.organize];
+    const extras = [];
+    if (checked('organize-sort'))    { sub += prices.extras.sort;    extras.push('Lajittelu +10€'); }
+    if (checked('organize-storage')) { sub += prices.extras.storage; extras.push('Varastointi +15€'); }
+    if (checked('organize-trash'))   { sub += prices.extras.trash;   extras.push('Poisto +20€'); }
+    total += sub;
+    breakdown.push({ name: 'Järjestely' + (extras.length ? ' + lisät' : ''), price: sub });
   }
 
-  function getYardTasks() {
+  if (svcState.yard) {
+    let sub = 0;
     const tasks = [];
-    if (document.getElementById("yard-grass").checked) tasks.push("Ruohonleikkuu");
-    if (document.getElementById("yard-leaves").checked) tasks.push("Lehtien keräys");
-    if (document.getElementById("yard-trash").checked) tasks.push("Roskien siivous");
-    return tasks;
+    if (checked('yard-grass'))  { sub += prices.yard.grass;  tasks.push('Ruohonleikkuu'); }
+    if (checked('yard-leaves')) { sub += prices.yard.leaves; tasks.push('Lehtien keräys'); }
+    if (checked('yard-trash'))  { sub += prices.yard.trash;  tasks.push('Roskien siivous'); }
+    if (tasks.length === 0) sub = 10;
+    if (tasks.length >= 2) sub -= 8;
+    if (tasks.length >= 3) sub -= 5;
+    sub = Math.max(sub, 0);
+    total += sub;
+    breakdown.push({ name: 'Pihanhoito' + (tasks.length ? ': ' + tasks.join(', ') : ''), price: sub });
   }
 
-  function update() {
-    organizeBox.style.display = svcOrganize.checked ? "block" : "none";
-    yardBox.style.display = svcYard.checked ? "block" : "none";
-    cleanBox.style.display = svcClean.checked ? "block" : "none";
-
-    let total = 0;
-    const services = selectedServices();
-
-    if (svcOrganize.checked) {
-      const size = document.getElementById("organize-size").value;
-      total += priceState.organize[size] || 0;
-
-      if (document.getElementById("organize-sort").checked) total += 10;
-      if (document.getElementById("organize-storage").checked) total += 15;
-      if (document.getElementById("organize-trash").checked) total += 20;
-    }
-
-    if (svcYard.checked) {
-      const tasks = getYardTasks();
-
-      tasks.forEach(task => {
-        if (task === "Ruohonleikkuu") total += priceState.yard.grass;
-        if (task === "Lehtien keräys") total += priceState.yard.leaves;
-        if (task === "Roskien siivous") total += priceState.yard.trash;
-      });
-
-      if (tasks.length === 0) total += 10;
-      if (tasks.length >= 2) total -= 8;
-      if (tasks.length >= 3) total -= 5;
-    }
-
-    if (svcClean.checked) {
-      const size = document.getElementById("clean-size").value;
-      total += priceState.clean[size] || 0;
-    }
-
-    if (services.length >= 2) total *= 0.92;
-    if (services.length >= 3) total *= 0.90;
-
-    if (document.getElementById("weekend").checked) {
-      total += 25;
-    }
-
-    if (services.length > 0) {
-      total += 10;
-    }
-
-    total = Math.max(0, Math.round(total));
-
-    document.getElementById("price").textContent = `~ ${total}€`;
-    buildMessage();
+  if (svcState.clean) {
+    const sub = prices.clean[sizeState.clean];
+    total += sub;
+    breakdown.push({ name: 'Kotisiivous', price: sub });
   }
 
-  function buildMessage() {
-    const firstname = document.getElementById("firstname").value.trim();
-    const lastname = document.getElementById("lastname").value.trim();
-    const city = document.getElementById("city").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const phone = document.getElementById("phone").value.trim();
-    const details = document.getElementById("details").value.trim();
-    const tools = document.getElementById("outsideTool").value;
-    const weekend = document.getElementById("weekend").checked ? "Kyllä" : "Ei";
-    const services = selectedServices();
+  let discount = 0;
+  if (active >= 3) { discount = Math.round(total * 0.10); }
+  else if (active >= 2) { discount = Math.round(total * 0.08); }
 
-    const organizeSize = document.getElementById("organize-size").value;
-    const cleanSize = document.getElementById("clean-size").value;
-    const yardTasks = getYardTasks();
+  if (active > 0) total += prices.base;
+  total -= discount;
+  if (checked('weekend')) total += prices.weekend;
+  total = Math.max(0, Math.round(total));
 
-    const toolText = tools === "customer"
-      ? "Käytetään asiakkaan välineitä."
-      : "Välineet sovitaan erikseen.";
+  return { total, breakdown, discount, active };
+}
 
-    const organizeSizeText = {
-      small: "pieni työ",
-      medium: "keskikokoinen työ",
-      large: "laaja työ"
-    }[organizeSize];
+function renderBreakdown({ total, breakdown, discount, active }) {
+  const container = v('breakdown');
+  const emptyRow = v('empty-row');
+  const discountRow = v('discount-row');
 
-    const cleanSizeText = {
-      small: "pieni asunto",
-      medium: "keskikokoinen asunto",
-      large: "suuri asunto"
-    }[cleanSize];
+  if (breakdown.length === 0) {
+    container.innerHTML = '<div class="breakdown-item empty" id="empty-row">Ei valittuja palveluja</div>';
+    discountRow.style.display = 'none';
+    return;
+  }
+  
+  let html = '';
+  breakdown.forEach(item => {
+    html += `<div class="breakdown-item"><span class="bk-name">${item.name}</span><span class="bk-price">${item.price}€</span></div>`;
+  });
+  if (active > 0) {
+    html += `<div class="breakdown-item"><span class="bk-name">Aloitusmaksu</span><span class="bk-price">${prices.base}€</span></div>`;
+  }
+  if (checked('weekend')) {
+    html += `<div class="breakdown-item"><span class="bk-name">Viikonloppu</span><span class="bk-price">+${prices.weekend}€</span></div>`;
+  }
+  container.innerHTML = html;
 
-    let serviceDetails = "Ei valittuja palveluja.";
+  if (discount > 0) {
+    discountRow.style.display = 'flex';
+    v('discount-val').textContent = '–' + discount + '€';
+  } else {
+    discountRow.style.display = 'none';
+  }
+}
 
-    if (services.includes("Järjestely ja karsiminen")) {
-      const extra = [];
-      if (document.getElementById("organize-sort").checked) extra.push("tavaroiden lajittelu");
-      if (document.getElementById("organize-storage").checked) extra.push("kaappien tai varaston järjestely");
-      if (document.getElementById("organize-trash").checked) extra.push("ylimääräisten tavaroiden poisto");
+function getYardTasks() {
+  const t = [];
+  if (checked('yard-grass'))  t.push('Ruohonleikkuu');
+  if (checked('yard-leaves')) t.push('Lehtien keräys');
+  if (checked('yard-trash'))  t.push('Roskien siivous');
+  return t;
+}
 
-      serviceDetails += `\n- Järjestely ja karsiminen: ${organizeSizeText}`;
-      if (extra.length) serviceDetails += ` (${extra.join(", ")})`;
-    }
+function buildMessage(total) {
+  const fn  = v('firstname').value.trim();
+  const ln  = v('lastname').value.trim();
+  const cty = v('city').value.trim();
+  const em  = v('email').value.trim();
+  const ph  = v('phone').value.trim();
+  const det = v('details').value.trim();
+  const wknd = checked('weekend') ? 'Kyllä (+25€)' : 'Ei';
 
-    if (services.includes("Pihanhoito")) {
-      serviceDetails += `\n- Pihanhoito: ${yardTasks.length ? yardTasks.join(", ") : "ei tarkennettu"}`;
-    }
+  const svcs = [];
+  if (svcState.organize) {
+    const extras = [];
+    if (checked('organize-sort'))    extras.push('lajittelu');
+    if (checked('organize-storage')) extras.push('varastointi');
+    if (checked('organize-trash'))   extras.push('tavaran poisto');
+    const szMap = { small:'pieni', medium:'keskikokoinen', large:'laaja' };
+    svcs.push(`Järjestely ja karsiminen (${szMap[sizeState.organize]}${extras.length ? ', '+extras.join(', ') : ''})`);
+  }
+  if (svcState.yard) {
+    const tasks = getYardTasks();
+    svcs.push(`Pihanhoito${tasks.length ? ': '+tasks.join(', ') : ''}`);
+  }
+  if (svcState.clean) {
+    const szMap = { small:'pieni asunto', medium:'keskikokoinen asunto', large:'suuri asunto' };
+    svcs.push(`Kotisiivous (${szMap[sizeState.clean]})`);
+  }
 
-    if (services.includes("Kotisiivous")) {
-      serviceDetails += `\n- Kotisiivous: ${cleanSizeText}`;
-    }
+  return `Hei,
 
-    const msg =
-`Hei,
+Nimeni on ${fn || '–'} ${ln || ''}.
+Sijainti: ${cty || '–'}
 
-Nimeni on ${firstname} ${lastname}.
-Kaupunki / alue: ${city}
+Haluaisin tilata seuraavat palvelut:
+${svcs.length ? svcs.map(s => '• ' + s).join('\n') : '• Ei valintoja'}
 
-Valitut palvelut:
-${services.length ? services.map(s => `- ${s}`).join("\n") : "- Ei valittuja palveluja"}
-
-Tarkennukset:
-${serviceDetails}
+Viikonlopputyö: ${wknd}
 
 Lisätiedot:
-${details || "Ei lisätietoja."}
+${det || 'Ei lisätietoja.'}
 
-Arvioitu hinta: ${document.getElementById("price").textContent}
-Viikonloppu: ${weekend}
-Välineet: ${toolText}
+Arvioitu hinta: ~${total}€
+(Lopullinen hinta sovitaan ennen työtä.)
 
 Yhteystiedot:
-Sähköposti: ${email}
-Puhelin: ${phone}
+Sähköposti: ${em || '–'}
+Puhelin: ${ph || '–'}`;
+}
 
-Huom: tämä on vain arvio, ei lopullinen hinta.`;
+function update() {
+  const { total, breakdown, discount, active } = calcTotal();
+  v('price-display').textContent = total > 0 ? '~' + total + ' €' : '0 €';
+  v('total-val').textContent = total > 0 ? '~' + total + ' €' : '0 €';
+  renderBreakdown({ total, breakdown, discount, active });
+  v('message').value = buildMessage(total);
+}
 
-    document.getElementById("message").value = msg;
-    return msg;
+async function copyMsg() {
+  const text = v('message').value;
+  try {
+    await navigator.clipboard.writeText(text);
+    const btn = event.target;
+    const orig = btn.textContent;
+    btn.textContent = 'Kopioitu ✓';
+    setTimeout(() => btn.textContent = orig, 2000);
+  } catch(e) {
+    v('message').select();
+    document.execCommand('copy');
   }
+}
 
-  async function copyMsg() {
-    const msg = buildMessage();
-    try {
-      await navigator.clipboard.writeText(msg);
-    } catch (err) {
-      const area = document.getElementById("message");
-      area.focus();
-      area.select();
-      document.execCommand("copy");
-    }
-  }
+function sendMail() {
+  const total = calcTotal().total;
+  const msg = buildMessage(total);
+  window.location.href = 'mailto:siistiarkiinfo@gmail.com?subject=' + encodeURIComponent('SiistiArki – tarjouspyyntö') + '&body=' + encodeURIComponent(msg);
+}
 
-  function sendMail() {
-    const msg = buildMessage();
-    const subject = encodeURIComponent("SiistiArki tarjouspyyntö");
-    const body = encodeURIComponent(msg);
-    window.location.href = `mailto:siistiarkiinfo@gmail.com?subject=${subject}&body=${body}`;
-  }
-
-  update();
+update();
 </script>
-
 </body>
 </html>
